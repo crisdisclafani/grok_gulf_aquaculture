@@ -66,6 +66,7 @@
       </div>
       <p class="cine-cycle-hint"></p>
     </div>
+    <button type="button" class="ga-facilities-toggle" aria-label="Explore interactive facilities">Explore facilities</button>
     <button type="button" class="cine-replay" aria-label="Replay opening sequence">Replay</button>
   `;
   mount.appendChild(root);
@@ -83,6 +84,9 @@
   const threadGlow = root.querySelector(".thread-glow");
   const threadCore = root.querySelector(".thread-core");
   const ambVid = root.querySelector(".cine-amb-vid");
+  const facilitiesToggle = root.querySelector(".ga-facilities-toggle");
+  let facilitiesOpen = false;
+  let facilitiesController = null;
 
   root.querySelector(".cine-cycle-title").textContent = S.cycleTitle || "The Production Cycle";
   root.querySelector(".cine-cycle-lead").textContent = S.cycleLead || "";
@@ -496,6 +500,37 @@
     raf = requestAnimationFrame(tick);
   }
 
+  /* ——— Client facility explorer: same hero, also available as standalone embed ——— */
+  function openFacilities() {
+    if (!window.GAFacilities || facilitiesOpen) return;
+    cancelAnimationFrame(raf);
+    running = false;
+    stopAmbient();
+    videos.forEach(x => { try { x.v.pause(); } catch (_) {} });
+    closeStageDetail();
+    const facilityMount = document.createElement("div");
+    facilityMount.className = "ga-facility-hero-mount";
+    root.appendChild(facilityMount);
+    facilitiesOpen = true;
+    facilitiesToggle.hidden = true;
+    replayBtn.hidden = true;
+    facilitiesController = window.GAFacilities.mount(facilityMount, {
+      standalone: false,
+      scene: "phase1",
+      onClose: closeFacilities
+    });
+  }
+  function closeFacilities() {
+    const facilityMount = root.querySelector(".ga-facility-hero-mount");
+    if (facilityMount) facilityMount.remove();
+    facilitiesOpen = false;
+    facilitiesController = null;
+    facilitiesToggle.hidden = false;
+    replayBtn.hidden = false;
+    settlePearls();
+  }
+  facilitiesToggle.addEventListener("click", openFacilities);
+
   /* ——— In-page stage detail (not a blocking overlay) ——— */
   function openStageDetail(i) {
     const p = S.phases[i];
@@ -587,6 +622,7 @@
   }
 
   replayBtn.addEventListener("click", startIntro);
+  if (new URLSearchParams(location.search).has("facilities")) openFacilities();
   const heroReplay = document.getElementById("hero-replay");
   if (heroReplay) heroReplay.addEventListener("click", startIntro);
 
@@ -689,7 +725,9 @@
     replay: startIntro,
     seek: seekTo,
     forcePearls: settlePearls,
-    openStage: openStageDetail
+    openStage: openStageDetail,
+    openFacilities,
+    closeFacilities
   };
 
   resizeCanvas();
