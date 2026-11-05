@@ -75,53 +75,85 @@ window.SITE = {
     cta: "Open interactive experience",
     placeholder: "Full-screen immersive intro — animation / WebGL placeholder linking to the live 3D experience."
   },
-  /* Five production phases as in the client PDF (ops diagram). */
+  /* Five production stages — aligned with cinematic intro pearl cycle. */
   phases: [
     {
       id: "broodstock",
       short: "Broodstock",
-      title: "Broodstock",
+      title: "Broodstock Management",
       color: "#388b8a",
-      bullets: ["Genetic integrity", "Climate-controlled tanks"],
+      video: "assets/video/hatchery.mp4",
+      poster: "assets/video/hatchery-poster.jpg",
+      bullets: ["Genetic integrity", "Climate-controlled tanks", "Native Gulf broodstock conditioning"],
       detail: "Controlled conditioning of native Gulf broodstock. Detail copy and facility notes to be supplied.",
+      processes: ["Genetic integrity programmes", "Climate-controlled tank conditioning"],
+      technologies: ["Climate-controlled tanks", "Broodstock management protocols"],
+      facilities: ["Balghailam Island Hatchery — Broodstock", "Sheikh Khalifa Marine Research Centre (SKMRC)"],
       params: [["Focus", "Genetic integrity"], ["Environment", "Climate-controlled tanks"], ["Status", "—"]]
     },
     {
-      id: "hatchery",
-      short: "Hatchery",
-      title: "Hatchery Phase",
+      id: "spawning",
+      short: "Spawning",
+      title: "Spawning & Larval Development",
       color: "#d97724",
-      bullets: ["Live feed preparation (rotifers, copepods, algae)", "Daily larval checks", "Water quality monitoring"],
-      detail: "Early-stage rearing with live feed and continuous water-quality practice. Detail copy to be supplied.",
-      params: [["Live feed", "Rotifers · copepods · algae"], ["Checks", "Daily larval"], ["Water", "Continuous monitoring"]]
+      video: "assets/video/hatchery.mp4",
+      poster: "assets/video/hatchery-poster.jpg",
+      bullets: ["Daily larval checks", "Water quality monitoring", "Early-stage rearing"],
+      detail: "Early-stage rearing with continuous water-quality practice. Detail copy to be supplied.",
+      processes: ["Spawning induction", "Larval development checks", "Water quality monitoring"],
+      technologies: ["Larval rearing systems", "Water-quality monitoring"],
+      facilities: ["Balghailam Island Hatchery — Larval rearing", "SKMRC laboratories"],
+      params: [["Checks", "Daily larval"], ["Water", "Continuous monitoring"], ["Status", "—"]]
+    },
+    {
+      id: "livefeed",
+      short: "Live feed",
+      title: "Live Feed & Hatchery Production",
+      color: "#e59b38",
+      video: "assets/video/lab.mp4",
+      poster: "assets/video/lab-poster.jpg",
+      bullets: ["Live feed preparation (rotifers, copepods, algae)", "Hatchery production", "Laboratory oversight"],
+      detail: "Live feed systems supporting hatchery production — rotifers, copepods, algae. Detail copy to be supplied.",
+      processes: ["Live feed preparation", "Hatchery production cycles"],
+      technologies: ["Rotifers · copepods · algae production", "Live-feed culture systems"],
+      facilities: ["Balghailam Island Hatchery — Live feed", "Infrastructure & Technology — Live-feed production"],
+      params: [["Live feed", "Rotifers · copepods · algae"], ["Checks", "Daily"], ["Status", "—"]]
     },
     {
       id: "nursery",
       short: "Nursery",
-      title: "Nursery Phase",
-      color: "#e59b38",
-      bullets: ["Gentle weaning and scaling", "RAS + flow-through hybrid systems"],
+      title: "Nursery & Fry Conditioning",
+      color: "#B39257",
+      video: "assets/video/research.mp4",
+      poster: "assets/video/research-poster.jpg",
+      bullets: ["Gentle weaning and scaling", "RAS + flow-through hybrid systems", "Fry conditioning for sea transfer"],
       detail: "Juveniles prepared for sea cages with minimal handling. Detail copy to be supplied.",
+      processes: ["Gentle weaning and scaling", "Fry conditioning"],
+      technologies: ["RAS + flow-through hybrid systems"],
+      facilities: ["Balghailam Island Hatchery — Nursery", "SKMRC — Hatchery and nursery"],
       params: [["Weaning", "Gentle / staged"], ["Systems", "RAS + flow-through"], ["Status", "—"]]
     },
     {
       id: "growout",
-      short: "Sea cages",
-      title: "Sea Cage Grow-Out",
+      short: "Grow-out",
+      title: "Marine Farming & Grow-Out Operations",
       color: "#0b2e3f",
+      video: "assets/video/sea.mp4",
+      poster: "assets/video/sea-poster.jpg",
       bullets: ["Natural light and flow", "Low stocking densities", "Minimal environmental footprint"],
       detail: "Grow-out in conditions that respect the Gulf marine environment. Detail copy to be supplied.",
+      processes: ["Sea cage grow-out", "Low-density marine farming"],
+      technologies: ["Marine fish cages", "Natural light and flow"],
+      facilities: ["Delma Island — Marine Fish Farming", "Khorfakkan — Marine Fish Farming"],
       params: [["Light", "Natural"], ["Density", "Low stocking"], ["Footprint", "Minimal"]]
-    },
-    {
-      id: "distribution",
-      short: "Distribution",
-      title: "Distribution",
-      color: "#b85e14",
-      bullets: ["Grading", "Packaging", "Other value adds"],
-      detail: "Grading, packaging and value-add steps before transfer to partners. Detail copy to be supplied.",
-      params: [["Grading", "—"], ["Packaging", "—"], ["Value add", "—"]]
     }
+  ],
+  /* Journey clips for cinematic intro — PLACEHOLDER footage (generated). */
+  journey: [
+    { id: "hatchery", word: "Hatchery", src: "assets/video/hatchery.mp4", poster: "assets/video/hatchery-poster.jpg", note: "Placeholder footage" },
+    { id: "sea", word: "Sea", src: "assets/video/sea.mp4", poster: "assets/video/sea-poster.jpg", note: "Placeholder footage" },
+    { id: "science", word: "Science", src: "assets/video/lab.mp4", poster: "assets/video/lab-poster.jpg", note: "Placeholder footage" },
+    { id: "research", word: "Research", src: "assets/video/research.mp4", poster: "assets/video/research-poster.jpg", note: "Placeholder footage" }
   ],
   cycleNote: "Continuous lab oversight · Real-time data & traceability",
   pillars: [

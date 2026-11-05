@@ -62,21 +62,21 @@
   <div class="hero-inner">
     <span class="tag"><i></i>${S.hero.eyebrow}</span>
     <h1>${S.hero.titleLead}<em>${S.hero.titleAccent}</em></h1>
-    <div class="rule">✦</div>
+    <div class="gold-thread" aria-hidden="true">✦</div>
     <p class="lead">${S.hero.text}</p>
     <p class="byline">${S.brand.attribution}</p>
     <div class="hero-cta">
-      <a class="btn" href="#phases">Explore production phases</a>
+      <a class="btn" href="#phases">Explore production stages</a>
       <a class="btn btn-ghost" href="#experience">Interactive experience</a>
+      <button type="button" class="btn btn-ghost hero-replay" id="hero-replay">Replay opening</button>
     </div>
   </div>
-  ${ph(S.experience.placeholder, true)}
 </section>`;
 
   h += `<section class="selector wrap" aria-labelledby="iam">
   <span class="tag"><i></i>Find your pathway</span>
   <h2 id="iam">I am <em>a…</em></h2>
-  <div class="rule">✦</div>
+  <div class="gold-thread" aria-hidden="true">✦</div>
   <div class="aud-grid">${S.audiences
     .map(
       (a) =>
@@ -103,7 +103,8 @@
   <div class="sec-head center">
     <div>
       <p class="eyebrow">Integrated production cycle</p>
-      <h2 id="phases-title">Five stages, from broodstock to distribution</h2>
+      <h2 id="phases-title">Five stages, from broodstock to grow-out</h2>
+      <div class="gold-thread" aria-hidden="true">production pearls</div>
       <p class="lead center-lead">${S.cycleNote}. Select a segment — the dial auto-rotates and pauses on interaction.</p>
     </div>
   </div>
@@ -128,14 +129,14 @@
       <ol class="phase-legend">${S.phases
         .map(
           (p, i) =>
-            `<li><button type="button" class="leg a-phase" data-idx="${i}" style="--pc:${p.color}" aria-current="${i === 0 ? "true" : "false"}"><span class="leg-n">0${i + 1}</span>${p.short}</button></li>`
+            `<li><button type="button" class="leg a-phase" data-idx="${i}" style="--pc:${p.color}" aria-current="${i === 0 ? "true" : "false"}"><span class="pearl-ico" aria-hidden="true">${i + 1}</span>${p.short}</button></li>`
         )
         .join("")}</ol>
     </div>
     <article class="phase-panel" id="phase-panel" aria-live="polite">
       <div class="phase-panel-head">
         <span class="eyebrow" id="phase-tag">Phase 01 of 05</span>
-        <span class="phase-facility" id="phase-facility">${PH}</span>
+        <span class="phase-facility" id="phase-facility">${(S.phases[0].facilities && S.phases[0].facilities[0]) || PH}</span>
       </div>
       <h3 id="phase-title">${S.phases[0].title}</h3>
       <p id="phase-detail">${S.phases[0].detail}</p>
@@ -298,6 +299,8 @@ ${S.audiences
     document.getElementById("phase-tag").textContent = `Phase 0${idx + 1} of 05`;
     document.getElementById("phase-title").textContent = p.title;
     document.getElementById("phase-detail").textContent = p.detail;
+    const fac = document.getElementById("phase-facility");
+    if (fac) fac.textContent = (p.facilities && p.facilities[0]) || "[Placeholder — content to be supplied by Gulf Aquaculture]";
     document.getElementById("phase-bullets").innerHTML = p.bullets.map((b) => `<li>${b}</li>`).join("");
     document.getElementById("phase-params").innerHTML = p.params
       .map((x) => `<div><span>${x[0]}</span><strong>${x[1]}</strong></div>`)
@@ -420,6 +423,14 @@ ${S.audiences
     thanks.hidden = true;
     form.querySelectorAll(".field-err").forEach((el) => (el.hidden = true));
   };
+
+
+  /* Cinematic hooks */
+  const heroReplay = document.getElementById("hero-replay");
+  if (heroReplay) heroReplay.addEventListener("click", () => window.GACinematic && window.GACinematic.replay());
+  window.addEventListener("cine:phase", (e) => {
+    if (typeof e.detail === "number") renderPhase(e.detail, true);
+  });
 
   /* Reveal */
   const io = new IntersectionObserver((es) => es.forEach((x) => x.isIntersecting && x.target.classList.add("in")), {
