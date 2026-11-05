@@ -54,34 +54,52 @@
 .ga-marker-hit{fill:transparent;stroke:none;pointer-events:all;cursor:pointer;touch-action:manipulation}.ga-marker-hit:focus{outline:none}
 
 .ga-sea-video{z-index:0}.ga-scene-poster{z-index:0}.ga-hotspots{z-index:3}.ga-media>img.ga-scene-poster{pointer-events:none}
-/* v2 — local real-time 3D, minimal spatial navigation */
-.ga-facilities-v2 .ga-scene-stack{background:radial-gradient(ellipse at 50% 30%,#143947,#071820 75%)}
-.ga-3d-mount{position:absolute;inset:0;overflow:hidden}
-.ga-3d-canvas{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
-.ga-3d-canvas:active{cursor:grabbing}
-.ga-facilities-v2 .ga-footnote{bottom:44px;max-width:calc(100% - 24px)}
-.ga-placeholder-note{position:absolute;left:12px;bottom:39px;z-index:6;padding:5px 8px;background:rgba(7,24,32,.68);border:1px solid rgba(229,155,56,.38);border-radius:3px;color:#edc88d;font-size:8px;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
-.ga-placeholder-note[hidden]{display:none}
-.ga-3d-help{position:absolute;right:12px;bottom:13px;z-index:6;color:rgba(255,255,255,.6);font-size:8px;letter-spacing:.08em;pointer-events:none}
-.ga-facilities-v2 .ga-footnote{bottom:13px;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ga-accessible-targets{position:absolute;z-index:7;left:10px;right:10px;bottom:48px;display:flex;justify-content:center;gap:5px;pointer-events:none}
-.ga-building-control,.ga-zone-control{pointer-events:auto;min-height:30px;padding:5px 10px;border:1px solid rgba(179,146,87,.48);border-radius:99px;background:rgba(7,24,32,.7);backdrop-filter:blur(7px);color:#fff;font:500 9px Inter,sans-serif;letter-spacing:.04em;cursor:pointer;touch-action:manipulation;transition:background .2s,border .2s,opacity .2s}
-.ga-building-control:hover,.ga-building-control:focus-visible,.ga-zone-control:hover,.ga-zone-control:focus-visible,.ga-zone-control[aria-pressed=true]{background:rgba(179,146,87,.9);border-color:#f2cb87;color:#071820;outline:2px solid #fff;outline-offset:2px}
-.ga-accessible-targets .ga-building-control[data-3d-target="utility"],.ga-accessible-targets .ga-building-control[data-3d-target="support"],.ga-accessible-targets .ga-building-control[data-3d-target="services"],.ga-accessible-targets .ga-building-control[data-3d-target="pods"]{display:none}
-.ga-loading{position:absolute;z-index:9;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;background:#071820;color:#d8bd8a;font-size:11px;letter-spacing:.12em;text-transform:uppercase;transition:opacity .35s}
-.ga-loading[hidden]{display:none}.ga-loading span{width:16px;height:16px;border:1px solid #b39257;border-top-color:transparent;border-radius:50%;animation:ga-spin 1s linear infinite}
-.ga-static-fallback{position:absolute;inset:0;display:grid;place-items:center;background:#071820;padding:14px}.ga-static-fallback svg{width:100%;height:100%;max-height:100%;object-fit:contain}
-.ga-facilities-v2 .ga-float-label{z-index:8;transition:opacity .18s}
-@keyframes ga-spin{to{transform:rotate(360deg)}}
-@media(max-width:600px){
- .ga-facilities-v2 .ga-accessible-targets{bottom:49px;flex-wrap:wrap;gap:4px;max-height:70px;overflow:hidden}
- .ga-building-control,.ga-zone-control{min-height:28px;padding:4px 8px;font-size:8px}
- .ga-facilities-v2 .ga-footnote{font-size:6px;max-width:63%;bottom:12px}
- .ga-3d-help{font-size:6px;right:8px}.ga-placeholder-note{bottom:91px;font-size:7px;left:8px}
- .ga-facilities-v2 .ga-topline{min-height:46px}
-}
-@media(prefers-reduced-motion:reduce){.ga-loading span{animation:none}.ga-building-control,.ga-zone-control{transition:none}}
+/* v3 — restore the approved real-render cinematic language */
+.ga-master-scene .ga-scene-poster{object-fit:cover;animation:ga-master-arrive 10s cubic-bezier(.2,.65,.25,1) both}
+.ga-master-sea{position:absolute;right:-3%;bottom:-8%;width:44%;height:55%;object-fit:cover;opacity:.24;mix-blend-mode:screen;filter:blur(1px);pointer-events:none;mask-image:radial-gradient(ellipse,#000 10%,transparent 70%);animation:ga-sea-reveal 5s ease both}
+.ga-master-reveal{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 78% 68%,rgba(56,139,138,.14),transparent 42%);animation:ga-sea-reveal 5s ease both}
+.ga-interior{background:#071820;padding:0;overflow:hidden}
+.ga-cinematic-interior{position:absolute;inset:0;display:block;width:100%;height:100%}
+.ga-interior-visual{position:absolute;inset:0;overflow:hidden;background:#071820}
+.ga-interior-poster,.ga-interior-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ga-interior-poster{animation:ga-interior-drift 20s ease-in-out infinite alternate}
+.ga-interior-video{z-index:1}
+.ga-interior-liquid{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,rgba(7,24,32,.58),transparent 40%,rgba(179,146,87,.08)),radial-gradient(ellipse at center,transparent 40%,rgba(7,24,32,.55));animation:ga-liquid-breathe 8s ease-in-out infinite alternate}
+.ga-room-pins{z-index:4;pointer-events:none}
+.ga-room-hit{pointer-events:all;cursor:pointer;fill:rgba(229,155,56,.001);stroke:rgba(229,155,56,0);stroke-width:3;vector-effect:non-scaling-stroke;touch-action:manipulation;outline:none;transition:fill .25s,stroke .25s}
+.ga-room-hit:hover,.ga-room-hit:focus-visible{fill:rgba(229,155,56,.12);stroke:#e5b35d}
+.ga-room-hit.is-selected{fill:rgba(229,155,56,.19);stroke:#f1bd70;filter:drop-shadow(0 0 8px rgba(229,155,56,.7))}
+.ga-room-marker{pointer-events:none}
+.ga-interior .ga-float-label{z-index:7;left:50%;top:14px;transform:translateX(-50%);background:rgba(7,24,32,.9);font-size:12px;letter-spacing:.06em}
+@keyframes ga-master-arrive{from{transform:scale(1.13);filter:blur(5px)}to{transform:scale(1.02);filter:blur(0)}}
+@keyframes ga-sea-reveal{from{opacity:0;transform:scale(1.1)}to{opacity:.24;transform:scale(1)}}
+@keyframes ga-interior-drift{from{transform:scale(1.03) translateX(-.5%)}to{transform:scale(1.1) translateX(.5%)}}
+@keyframes ga-liquid-breathe{from{opacity:.75}to{opacity:1}}
+@media(max-width:600px){.ga-master-sea{width:65%;height:40%;right:-10%;bottom:3%;opacity:.2}.ga-interior .ga-float-label{font-size:11px}.ga-room-hit{stroke-width:4}}
+@media(prefers-reduced-motion:reduce){.ga-master-scene .ga-scene-poster,.ga-master-sea,.ga-master-reveal,.ga-interior-poster,.ga-interior-liquid{animation:none!important}}
 
-.ga-3d-mount{z-index:1;pointer-events:auto}.ga-facilities-v2 .ga-scene-stack{pointer-events:none}.ga-facilities-v2 .ga-accessible-targets{pointer-events:none}.ga-facilities-v2 .ga-accessible-targets button{pointer-events:auto}
+.ga-room-pins{transform:none!important;z-index:4}.ga-cinematic-interior .ga-interior-visual{transform:translateZ(0)}
 
-.ga-is-static .ga-3d-help{display:none}.ga-is-static .ga-placeholder-note{bottom:39px}
+.ga-room-marker .ga-dot-ring{r:12}.ga-room-marker .ga-pulse{r:25}.ga-room-hit{r:43}
+
+.ga-room-pins{position:absolute;inset:0;z-index:4;pointer-events:none}
+.ga-room-hit{position:absolute;width:58px;height:58px;padding:0;border:0;border-radius:50%;background:transparent;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;touch-action:manipulation;outline:none;color:#fff;display:grid;place-items:center}
+.ga-room-hit .ga-pulse,.ga-room-hit .ga-dot-ring,.ga-room-hit .ga-dot{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.ga-room-hit .ga-pulse{width:52px;height:52px;border:1px solid rgba(229,179,93,.55);animation:ga-pin-pulse 2.4s ease-out infinite}
+.ga-room-hit .ga-dot-ring{width:24px;height:24px;border:2px solid #e5b35d;background:rgba(7,24,32,.42);box-shadow:0 0 12px rgba(229,179,93,.45)}
+.ga-room-hit .ga-dot{width:7px;height:7px;background:#f8d491;box-shadow:0 0 8px #e5b35d}
+.ga-room-hit:hover .ga-dot-ring,.ga-room-hit:focus-visible .ga-dot-ring,.ga-room-hit.is-selected .ga-dot-ring{background:#e5b35d;border-color:#fff;box-shadow:0 0 20px rgba(229,179,93,.9)}
+.ga-room-hit.is-selected .ga-dot{background:#071820}
+.ga-room-name{position:absolute;top:52px;left:50%;transform:translateX(-50%);white-space:nowrap;background:rgba(7,24,32,.9);border:1px solid rgba(229,179,93,.38);border-radius:3px;padding:4px 7px;color:#fff;font:500 10px/1.2 var(--ga-font,system-ui);letter-spacing:.03em;opacity:0;transition:opacity .2s;pointer-events:none}
+.ga-room-hit:hover .ga-room-name,.ga-room-hit:focus-visible .ga-room-name,.ga-room-hit.is-selected .ga-room-name{opacity:1}
+@keyframes ga-pin-pulse{0%{width:24px;height:24px;opacity:1}100%{width:64px;height:64px;opacity:0}}
+@media(max-width:600px){.ga-room-hit{width:48px;height:48px}.ga-room-hit .ga-dot-ring{width:22px;height:22px}.ga-room-name{font-size:9px;top:45px}}
+
+.ga-master-scene{transform:none!important;filter:none!important}
+.ga-master-scene.is-entering{opacity:.35}
+.ga-master-scene .ga-media{transform:none!important}
+.ga-interior{transform:none!important;filter:none!important}
+
+.ga-master-scene .ga-media{background:radial-gradient(ellipse at center,#183b43 0,#071820 72%)}
+.ga-master-scene .ga-scene-poster{object-fit:contain;animation:ga-master-fade 1.6s ease both}
+@keyframes ga-master-fade{from{opacity:.25;filter:blur(5px)}to{opacity:1;filter:blur(0)}}

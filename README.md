@@ -27,13 +27,13 @@ All copy lives in `js/content.js` for future Statamic mapping. No invented metri
 
 Synced to `crisdisclafani/grok_gulf_aquaculture` → https://crisdisclafani.github.io/grok_gulf_aquaculture/
 
-## Interactive facilities — 3D v2
+## Interactive facilities — cinematic v3
 
-The explorer starts from a real-time aerial coastal masterplan containing the Phase 1 halls, Phase 2 hatchery/broodstock, visitor dome and offshore sea cages together. Three.js r160 is bundled locally with its MIT licence; no CDN or external runtime requests are used.
+The explorer opens on a high cinematic aerial composite using the client architectural renders and generated offshore imagery. The visitor dome, Phase 1 and Phase 2 buildings and offshore sea structure are visible together, with nine pulsing gold/petrol hotspots. The low-poly Three.js scene has been removed; v3 uses no 3D runtime.
 
-Buildings open low-poly 3D environments inspired by the supplied PDF layouts. Water surfaces use a lightweight animated shader, with gold pipework, walkways, camera fly-in and clickable zone focus. **Every interior is a placeholder awaiting client images, not an as-built model.** Concept interiors retain their visible `concept` tag. PDF drawings are retained only as archived source references and are never displayed in the explorer.
+Buildings open the supplied real renders or cinematic generated clips/posters with Ken Burns motion, liquid/vignette transitions and responsive zone pins. Phase 1 and Phase 2 no longer display PDF drawings. Short PDF-derived zone names remain as interaction labels only, with no description panels. **All interiors are placeholders awaiting client images**; invented concept areas retain the visible `concept` tag. PDF crops remain on disk only as archived source references and are not loaded by the explorer.
 
-Drag to orbit, pinch/scroll to zoom, or use the accessible building/zone buttons. DPR is capped, geometry is low-poly, and WebGL failure provides static illustrated navigation. Standalone URL: `/embed/facilities.html`.
+`assets/facilities/aerial-masterplan.jpg` is an illustrative composite, not a survey or an as-built site plan. Standalone URL: `/embed/facilities.html`.
 
 ```html
 <iframe src="https://crisdisclafani.github.io/grok_gulf_aquaculture/embed/facilities.html"
@@ -42,4 +42,4 @@ Drag to orbit, pinch/scroll to zoom, or use the accessible building/zone buttons
   loading="lazy" allow="autoplay; fullscreen"></iframe>
 ```
 
-Desktop/mobile/fallback interaction tests: `python3 tests/test_facilities_v2.py` with the included local preview server running. Screenshots: `screenshots/facilities-v2/`.
+Interaction tests: `python3 tests/test_facilities_v3.py` with the local preview server running. Set `GA_BASE` to test the publish clone or live site. Screenshots: `screenshots/facilities-v3/`; approved v1 visual references: `screenshots/facilities/`.

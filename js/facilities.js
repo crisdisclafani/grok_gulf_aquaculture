@@ -1,60 +1,122 @@
-/* Navigation shell for the local Three.js facilities explorer.
-   All interiors are placeholders awaiting client images; no PDF drawings shown. */
-(function(){
- const DATA=window.GA_FACILITIES,MODELS=window.GA_3D;
- if(!DATA||!MODELS)return;
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const buildingTargets=[['p1-production','Phase 1 · Production halls'],['p2-hatchery','Phase 2 · Hatchery'],['p2-broodstock','Phase 2 · Broodstock'],['visitor','Visitor centre'],['sea-cages','Offshore sea cages'],['utility','East utility hall'],['support','South support hall'],['services','Site services'],['pods','Research pods']];
- function mount(el,options){
-  if(!el||el.dataset.gaFacilitiesMounted)return null;el.dataset.gaFacilitiesMounted='true';
-  let viewer=null,current=null,selectedZone='',fallback=false;
-  el.classList.add('ga-facilities','ga-facilities-v2');el.setAttribute('role','region');el.setAttribute('aria-label','Interactive 3D Gulf Aquaculture facilities');
-  el.innerHTML=`<div class="ga-topline"><button class="ga-back" type="button" aria-label="Back to aerial masterplan" hidden><span aria-hidden="true">←</span><span>Aerial</span></button><div class="ga-breadcrumb" aria-live="polite">Coastal masterplan</div><span class="ga-concept-tag" hidden>concept</span><button class="ga-close" type="button" aria-label="Close facilities" ${options.standalone?'hidden':''}>×</button></div><div class="ga-viewport"><div class="ga-scene-stack"></div><div class="ga-float-label" aria-hidden="true"></div><div class="ga-loading" role="status"><span></span>Preparing 3D environment</div><div class="ga-placeholder-note" hidden>placeholder · awaiting client images</div><div class="ga-3d-help">drag to orbit · pinch / scroll to zoom</div><div class="ga-accessible-targets" aria-label="Buildings and zones"></div></div><div class="ga-footnote">Illustrative aerial composition · placeholder</div>`;
-  const viewport=el.querySelector('.ga-viewport'),stack=el.querySelector('.ga-scene-stack'),targetsEl=el.querySelector('.ga-accessible-targets'),float=el.querySelector('.ga-float-label'),crumb=el.querySelector('.ga-breadcrumb'),back=el.querySelector('.ga-back'),concept=el.querySelector('.ga-concept-tag'),placeholder=el.querySelector('.ga-placeholder-note'),loading=el.querySelector('.ga-loading'),note=el.querySelector('.ga-footnote');
-  function label(text,target){
-   if(!text){float.classList.remove('is-visible');return;}float.textContent=text;float.classList.add('is-visible');
-   if(target){const a=el.getBoundingClientRect(),r=target.getBoundingClientRect();float.style.left=Math.max(8,Math.min(el.clientWidth-160,r.left-a.left+r.width/2-65))+'px';float.style.top=Math.max(8,r.top-a.top-38)+'px';}
-   else{float.style.left='50%';float.style.top='14px';float.style.transform='translateX(-50%)';}
+/* Dependency-free cinematic facility explorer; all interiors are placeholders. */
+(function () {
+  const DATA = window.GA_FACILITIES;
+  if (!DATA) return;
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const pts = p => p.points || p;
+  function roomPins(item) {
+    const pos=[[22,32],[50,28],[76,32],[30,68],[61,65],[83,69],[50,48]];
+    return `<div class="ga-room-pins" aria-label="${esc(item.title)} interactive zones">${item.rooms.map((r,i) => {
+      const p=pos[i] || [50,50];
+      return `<button type="button" class="ga-room-hit" data-room="${r.id}" style="left:${p[0]}%;top:${p[1]}%" aria-label="${esc(r.name)}" aria-pressed="false"><span class="ga-pulse" aria-hidden="true"></span><span class="ga-dot-ring" aria-hidden="true"></span><span class="ga-dot" aria-hidden="true"></span><span class="ga-room-name">${esc(r.name)}</span></button>`;
+    }).join("")}</div>`;
   }
-  function makeTarget(id,name,zone=false){const b=document.createElement('button');b.type='button';b.className=zone?'ga-zone-control':'ga-building-control';b.dataset[zone?'3dZone':'3dTarget']=id;b.textContent=name;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>zone?focusZone(id,name):openInterior(id));return b;}
-  function staticSVG(interior){
-   if(!interior)return `<svg viewBox="0 0 1000 650" role="img" aria-label="Static aerial masterplan"><defs><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#174a5a"/><stop offset="1" stop-color="#388b8a"/></linearGradient></defs><rect width="1000" height="650" fill="url(#sea)"/><path d="M0 0H720L610 410 0 525Z" fill="#b5a17c"/><path d="M0 0H690L595 365 0 475Z" fill="#8c8b70"/><g fill="#f6f3e9" stroke="#b39257" stroke-width="4"><path d="M100 120h160v60H100zM290 105h150v72H290zM460 90h100v100H460zM480 225h110v85H480zM100 245h165v60H100z"/><ellipse cx="260" cy="340" rx="65" ry="35"/></g><path d="M65 330h520" stroke="#0b2e3f" stroke-width="15"/><g fill="none" stroke="#e5b35d" stroke-width="12"><ellipse cx="760" cy="440" rx="80" ry="54"/><ellipse cx="865" cy="540" rx="72" ry="49"/><ellipse cx="690" cy="565" rx="68" ry="46"/></g></svg>`;
-   return `<svg viewBox="0 0 1000 650" role="img" aria-label="Static placeholder interior"><rect width="1000" height="650" fill="#0b2e3f"/><path d="M80 80H920V590H80Z" fill="#233e48" stroke="#b39257" stroke-width="4"/>${interior.zones.map((z,i)=>{const x=120+(i%3)*260,y=130+Math.floor(i/3)*220;return `<g><rect x="${x}" y="${y}" width="220" height="170" rx="8" fill="#173440" stroke="#b39257"/><g fill="none" stroke="#388b8a" stroke-width="13"><circle cx="${x+65}" cy="${y+75}" r="36"/><circle cx="${x+155}" cy="${y+75}" r="36"/></g><text x="${x+110}" y="${y+145}" text-anchor="middle" fill="#fff" font-size="15" font-family="sans-serif">${esc(z.name)}</text></g>`}).join('')}</svg>`;
+
+  function mount(el, options) {
+    if (!el || el.dataset.gaFacilitiesMounted) return null;
+    el.dataset.gaFacilitiesMounted = "true";
+    let scene = DATA.masterplan;
+    let history = [];
+    el.classList.add("ga-facilities");
+    el.setAttribute("role", "region");
+    el.setAttribute("aria-label", "Interactive Gulf Aquaculture facilities");
+    el.innerHTML = `<div class="ga-topline"><button class="ga-back" type="button" aria-label="Back to facilities" hidden><span aria-hidden="true">←</span><span>Back</span></button><div class="ga-breadcrumb" aria-live="polite">Facilities</div><span class="ga-concept-tag" hidden>concept</span><button class="ga-close" type="button" aria-label="Close facilities" ${options.standalone ? "hidden" : ""}>×</button></div><div class="ga-viewport"><div class="ga-scene-stack"></div><div class="ga-float-label" aria-hidden="true"></div></div><nav class="ga-scene-nav" aria-label="Facility scenes">${DATA.scenes.map(s => `<button class="ga-scene-tab" data-go-scene="${s.id}" type="button" aria-pressed="${s.id===scene.id}">${esc(s.tab)}</button>`).join("")}</nav><div class="ga-footnote"></div>`;
+    const stack = el.querySelector(".ga-scene-stack");
+    const back = el.querySelector(".ga-back");
+    const crumb = el.querySelector(".ga-breadcrumb");
+    const concept = el.querySelector(".ga-concept-tag");
+    const float = el.querySelector(".ga-float-label");
+    const note = el.querySelector(".ga-footnote");
+
+    function clearFloat() { float.classList.remove("is-visible"); float.textContent = ""; }
+    function label(target, text, sticky) {
+      float.textContent = text;
+      float.classList.add("is-visible");
+      if (target) {
+        const er = el.getBoundingClientRect(), tr = target.getBoundingClientRect();
+        float.style.left = Math.max(8, Math.min(er.width - 150, tr.left - er.left + tr.width / 2 - 65)) + "px";
+        float.style.top = Math.max(8, tr.top - er.top - 38) + "px";
+      }
+    }
+    function activateRooms() {
+      stack.querySelectorAll(".ga-room-hit").forEach(poly => {
+        const activate = () => {
+          const selected = poly.getAttribute("aria-pressed") === "true";
+          stack.querySelectorAll(".ga-room-hit").forEach(p => { p.classList.remove("is-selected"); p.setAttribute("aria-pressed", "false"); });
+          clearFloat(); if (!selected) { poly.classList.add("is-selected"); poly.setAttribute("aria-pressed", "true"); }
+          else clearFloat();
+        };
+        poly.addEventListener("click", activate);
+        poly.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); } });
+      });
+    }
+    function bindBuildings() {
+      stack.querySelectorAll(".ga-building, .ga-marker-hit").forEach(poly => {
+        const name = poly.getAttribute("aria-label") || poly.querySelector("title")?.textContent || "Facility";
+        poly.addEventListener("pointerenter", () => label(poly, name, false));
+        poly.addEventListener("pointerleave", clearFloat);
+        poly.addEventListener("focus", () => label(poly, name, false));
+        poly.addEventListener("blur", clearFloat);
+        poly.addEventListener("click", () => openInterior(poly.dataset.building, name));
+        poly.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openInterior(poly.dataset.building, name); } });
+      });
+    }
+    function baseSeaPoster() { return DATA.scenes.find(s => s.id === "offshore").poster; }
+    function renderScene(next, push) {
+      if (push && scene) history.push({type:"scene", id:scene.id, title:scene.title});
+      scene = next;
+      el.dataset.scene = scene.id;
+      crumb.textContent = scene.title;
+      concept.hidden = true;
+      back.hidden = history.length === 0;
+      note.textContent = scene.credit;
+      note.className = "ga-footnote";
+      const master = scene.id === "masterplan";
+      const video = scene.video ? `<video class="ga-sea-video" muted defaultmuted playsinline webkit-playsinline loop preload="metadata" poster="${scene.poster}" aria-hidden="true"><source src="${scene.video}" type="video/mp4"></video>` : "";
+      stack.innerHTML = `<section class="ga-scene is-entering ga-fit-${scene.fit || (master ? "cover" : "cover")} ${master ? "ga-master-scene" : ""}" data-scene="${scene.id}"><div class="ga-media">${video}<img class="ga-scene-poster ${master ? "ga-master-campus" : ""}" src="${scene.image}" alt="${esc(scene.title)}" draggable="false">${master ? '<img class="ga-master-sea" src="'+baseSeaPoster()+'" alt="Offshore sea-cage structure" aria-hidden="true"><div class="ga-master-reveal"></div>' : ""}<div class="ga-vignette"></div><svg class="ga-hotspots" viewBox="${scene.viewBox}" preserveAspectRatio="xMidYMid ${master || scene.fit === "contain" ? "meet" : "slice"}" aria-label="Clickable buildings">${scene.buildings.map(b => `<g class="ga-building-group ${b.kind === "concept" ? "is-concept" : "is-real"}"><circle class="ga-marker-hit" cx="${b.marker[0]}" cy="${b.marker[1]}" r="24" data-building="${b.target}" data-hotspot-id="marker-${b.id}" tabindex="-1" aria-hidden="true"><title>${esc(b.name)}</title></circle><polygon class="ga-building" data-building="${b.target}" data-hotspot-id="${b.id}" points="${pts(b)}" data-click-x="${b.click ? b.click[0] : b.marker[0]}" data-click-y="${b.click ? b.click[1] : b.marker[1]}" tabindex="0" role="button" aria-label="${esc(b.name)}"><title>${esc(b.name)}</title></polygon></g>`).join("")}${scene.buildings.map(b => `<g class="ga-marker" transform="translate(${b.marker[0]} ${b.marker[1]})" aria-hidden="true"><circle class="ga-pulse" r="25"/><circle class="ga-dot-ring" r="12"/><circle class="ga-dot" r="4"/></g>`).join("")}</svg></div></section>`;
+      el.querySelectorAll(".ga-scene-tab").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.goScene === scene.id)));
+      bindBuildings();
+      const v = stack.querySelector("video");
+      if (v) { v.muted = true; v.defaultMuted = true; v.playsInline = true; if (!matchMedia("(prefers-reduced-motion:reduce)").matches) v.play().catch(() => {}); }
+      requestAnimationFrame(() => requestAnimationFrame(() => stack.querySelector(".ga-scene")?.classList.remove("is-entering")));
+    }
+    function openInterior(id, name) {
+      const item = DATA.interiors[id]; if (!item) return;
+      history.push({type:"scene", id:scene.id, title:scene.title});
+      clearFloat();
+      crumb.textContent = (scene.tab || "Masterplan") + " / " + item.title;
+      back.hidden = false;
+      concept.hidden = !item.concept;
+      note.textContent = "Placeholder · awaiting client images" + (item.concept ? " · concept" : "");
+      note.className = "ga-footnote" + (item.real ? " ga-plan-source" : " ga-plan-source is-concept");
+      const visual = item.visual || "hatchery";
+      const videoBase = new URL("../assets/video/", document.querySelector('script[src*="facilities.js"]').src).href;
+      const art = `<div class="ga-interior-visual"><img class="ga-interior-poster" src="${videoBase}${visual}-poster.jpg" alt="${esc(item.title)} cinematic placeholder" draggable="false"><video class="ga-interior-video" muted defaultmuted playsinline webkit-playsinline loop preload="metadata" poster="${videoBase}${visual}-poster.jpg" aria-hidden="true"><source src="${videoBase}${visual}.mp4" type="video/mp4"></video><div class="ga-interior-liquid"></div></div>`;
+      clearFloat();
+      stack.innerHTML = `<section class="ga-interior is-entering" data-interior="${id}"><div class="ga-plan-canvas ga-cinematic-interior">${art}${roomPins(item)}</div></section>`;
+      el.querySelectorAll(".ga-scene-tab").forEach(b => b.setAttribute("aria-pressed", "false"));
+      activateRooms();
+      const interiorVideo=stack.querySelector('.ga-interior-video');
+      if(interiorVideo){interiorVideo.muted=true;interiorVideo.defaultMuted=true;interiorVideo.playsInline=true;if(!matchMedia('(prefers-reduced-motion:reduce)').matches)interiorVideo.play().catch(()=>{});}
+      requestAnimationFrame(() => requestAnimationFrame(() => stack.querySelector(".ga-interior")?.classList.remove("is-entering")));
+      el.dispatchEvent(new CustomEvent("ga:interior", {detail:{id, concept:!!item.concept}}));
+    }
+    function goBack() {
+      const prev = history.pop();
+      if (!prev) return;
+      const oldScene = scene;
+      renderScene(prev.id === "masterplan" ? DATA.masterplan : DATA.scenes.find(s => s.id === prev.id), false);
+      crumb.textContent = (oldScene.tab || "Masterplan") + " / " + oldScene.title;
+      if (history.length === 0) crumb.textContent = scene.title;
+      back.hidden = history.length === 0;
+    }
+    back.addEventListener("click", goBack);
+    el.querySelector(".ga-close").addEventListener("click", () => options.onClose?.());
+    el.querySelectorAll("[data-go-scene]").forEach(b => b.addEventListener("click", () => { history = []; renderScene(DATA.scenes.find(s => s.id === b.dataset.goScene), false); }));
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && el.isConnected && history.length) goBack(); });
+    renderScene(scene, false);
+    return { showScene: id => { const s=DATA.scenes.find(x=>x.id===id); if(s){history=[];renderScene(s,false);} }, open: openInterior, back: goBack };
   }
-  function showStatic(interior){
-   fallback=true;el.classList.add('ga-is-static');if(viewer){viewer.dispose();viewer=null;}stack.innerHTML=`<div class="ga-static-fallback${interior?' ga-interior':''}"${interior?` data-interior="${current}"`:''}>${staticSVG(interior)}</div>`;loading.hidden=true;
-  }
-  function buildTargets(interior){
-   targetsEl.innerHTML='';const list=interior?interior.zones.map(z=>[z.id,z.name,true]):buildingTargets;
-   list.forEach(([id,name,zone])=>targetsEl.appendChild(makeTarget(id,name,!!zone)));
-  }
-  function setup(interior){
-   fallback=false;el.classList.remove('ga-is-static');if(viewer){viewer.dispose();viewer=null;}loading.hidden=false;stack.innerHTML='<div class="ga-3d-mount"></div>';if(interior){stack.dataset.interior=interior.title;stack.firstElementChild.classList.add('ga-interior');stack.firstElementChild.setAttribute('data-interior',current);}buildTargets(interior);
-   if(!window.GA3DViewer||!window.THREE){showStatic(interior);return;}
-   viewer=new GA3DViewer(stack.querySelector('.ga-3d-mount'),{
-    onSelect:openInterior,
-    onZone:(id,name)=>{selectedZone=id;targetsEl.querySelectorAll('[data-3d-zone]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset['3dZone']===id)));label(name);},
-    onError:()=>showStatic(interior)
-   });
-   if(viewer.failed){showStatic(interior);return;}
-   el.gaViewer=viewer;
-   if(interior)viewer.interior(interior);else viewer.masterplan();loading.hidden=true;
-  }
-  function openInterior(id){
-   const item=MODELS.interiors[id];if(!item)return;
-   if(fallback){current=id;el.dataset.scene=id;crumb.textContent='Masterplan / '+item.title;back.hidden=false;concept.hidden=!item.concept;placeholder.hidden=false;note.textContent='Static placeholder · awaiting client images';buildTargets(item);showStatic(item);return;}current=id;selectedZone='';el.dataset.scene=id;crumb.textContent='Masterplan / '+item.title;back.hidden=false;concept.hidden=!item.concept;placeholder.hidden=false;note.textContent=item.concept?'Illustrative concept · layout to be confirmed':'Plan-inspired 3D placeholder · not an as-built model';label('');stack.dataset.interior=id;
-   stack.firstElementChild.classList.add('ga-interior');stack.firstElementChild.setAttribute('data-interior',id);
-   stack.firstElementChild.dataset.interior=id;
-   setup(item);
-   el.dispatchEvent(new CustomEvent('ga:interior',{detail:{id,concept:!!item.concept,placeholder:true}}));
-  }
-  function showMasterplan(){current=null;selectedZone='';el.dataset.scene='masterplan';stack.dataset['3dScene']='masterplan';crumb.textContent='Coastal masterplan';back.hidden=true;concept.hidden=true;placeholder.hidden=true;note.textContent='Illustrative aerial composition · placeholder';label('');setup(null);}
-  function focusZone(id,name){if(fallback){selectedZone=id;targetsEl.querySelectorAll('[data-3d-zone]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset['3dZone']===id)));label(name);return;}viewer?.focusZone(id);selectedZone=id;targetsEl.querySelectorAll('[data-3d-zone]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset['3dZone']===id)));label(name);}
-  back.addEventListener('click',showMasterplan);el.querySelector('.ga-close').addEventListener('click',()=>options.onClose?.());
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&el.isConnected&&current)showMasterplan();});
-  showMasterplan();
-  return {showScene:showMasterplan,open:openInterior,back:showMasterplan,get viewer(){return viewer;}};
- }
- window.GAFacilities={mount,data:DATA,models:MODELS};
- document.querySelectorAll('[data-ga-facilities]').forEach(el=>mount(el,{standalone:true,scene:el.dataset.scene}));
+  window.GAFacilities = { mount, data: DATA };
+  document.querySelectorAll("[data-ga-facilities]").forEach(el => mount(el, {standalone:true, scene:el.dataset.scene}));
 })();

@@ -8,6 +8,21 @@
   const room = (id, name, points) => ({ id, name, points });
 
   window.GA_FACILITIES = {
+    masterplan: {
+      id: "masterplan", title: "Coastal masterplan", viewBox: "0 0 1600 900",
+      image: base + "aerial-masterplan.jpg", credit: "Client renders + generated offshore placeholder · illustrative composition",
+      buildings: [
+        polygon("visitor", "Visitor centre", "80,445 250,402 380,495 340,585 135,572", [226,501], "visitor", "concept"),
+        polygon("p2-hatchery", "Phase 2 · Hatchery", "500,245 740,252 755,345 510,355", [626,302], "p2-hatchery", "real"),
+        polygon("p2-broodstock", "Phase 2 · Broodstock", "780,258 1010,280 1000,374 780,354", [892,315], "p2-broodstock", "real"),
+        polygon("p1-production", "Phase 1 · Production halls", "365,505 570,430 770,550 560,645", [565,540], "p1-production", "real"),
+        polygon("p1-east", "East utility hall", "610,590 750,552 828,635 690,690", [723,622], "utility", "concept"),
+        polygon("p1-south", "South support hall", "475,668 580,625 682,701 565,751", [580,687], "support", "concept"),
+        polygon("p1-services", "Site services", "745,470 842,435 900,514 800,552", [825,492], "services", "concept"),
+        polygon("p2-pods", "Research pods", "690,366 830,366 850,425 710,425", [771,394], "pods", "concept"),
+        polygon("sea-cages", "Offshore sea cages", "1110,520 1470,520 1500,795 1110,795", [1300,661], "sea-cages", "concept")
+      ]
+    },
     scenes: [
       {
         id: "phase1", tab: "Phase 1", title: "Production campus",
@@ -43,8 +58,8 @@
     ],
     interiors: {
       "p1-production": {
-        title: "Phase 1 · Ground floor", real: true, source: "Client drawing · MRC-AB-00A-02-003",
-        image: base + "phase1-ground-floor.jpg", viewBox: "0 0 2400 1287",
+        title: "Phase 1 · Ground floor", real: true, source: "Plan-inspired placeholder · awaiting client images",
+        visual: "hatchery", image: base + "phase1-ground-floor.jpg", viewBox: "0 0 2400 1287",
         rooms: [
           room("p1-nursery", "Nursery tanks", "275,435 830,435 830,1100 275,1100"),
           room("p1-weaning", "Weaning tanks", "880,400 1020,400 1020,1060 880,1060"),
@@ -56,8 +71,8 @@
         ]
       },
       "p2-hatchery": {
-        title: "Phase 2 · Hatchery", real: true, source: "Client drawing · HBC-SKMRC-02-AB-C-AR-001",
-        image: base + "phase2-hatchery-plan.jpg", viewBox: "0 0 1800 593",
+        title: "Phase 2 · Hatchery", real: true, source: "Plan-inspired placeholder · awaiting client images",
+        visual: "hatchery", image: base + "phase2-hatchery-plan.jpg", viewBox: "0 0 1800 593",
         rooms: [
           room("p2-nursery", "Nursery", "430,90 685,90 685,395 430,395"),
           room("p2-weaning", "Weaning", "685,90 915,90 915,395 685,395"),
@@ -68,8 +83,8 @@
         ]
       },
       "p2-broodstock": {
-        title: "Phase 2 · Broodstock", real: true, source: "Client drawing · HBC-SKMRC-02-AB-C-AR-001",
-        image: base + "phase2-broodstock-plan.jpg", viewBox: "0 0 750 770",
+        title: "Phase 2 · Broodstock", real: true, source: "Plan-inspired placeholder · awaiting client images",
+        visual: "hatchery", image: base + "phase2-broodstock-plan.jpg", viewBox: "0 0 750 770",
         rooms: [
           room("p2-bs8", "Broodstock 8", "20,145 215,145 215,275 20,275"),
           room("p2-bs67", "Broodstock 6–7", "205,270 475,270 475,350 205,350"),
@@ -80,27 +95,30 @@
         ]
       },
       visitor: {
-        title: "Visitor centre", concept: true, svg: "visitor", viewBox: "0 0 1000 600",
+        title: "Visitor centre", concept: true, visual: "research", svg: "visitor", viewBox: "0 0 1000 600",
         rooms: [room("visitor-reception", "Reception", "390,420 610,420 610,545 390,545"), room("visitor-gallery", "Exhibition gallery", "160,160 450,160 450,420 160,420"), room("visitor-theatre", "Presentation", "550,160 840,160 840,420 550,420")]
       },
       utility: {
+        visual: "lab",
         title: "Utility hall", concept: true, svg: "utility", viewBox: "0 0 1000 600",
         rooms: [room("utility-water", "Water treatment", "100,110 500,110 500,490 100,490"), room("utility-control", "Control", "560,110 900,110 900,300 560,300"), room("utility-store", "Store", "560,340 900,340 900,490 560,490")]
       },
       support: {
+        visual: "lab",
         title: "Support hall", concept: true, svg: "utility", viewBox: "0 0 1000 600",
         rooms: [room("support-workshop", "Workshop", "100,110 500,110 500,490 100,490"), room("support-store", "Storage", "560,110 900,110 900,490 560,490")]
       },
       services: {
+        visual: "lab",
         title: "Site services", concept: true, svg: "utility", viewBox: "0 0 1000 600",
         rooms: [room("services-plant", "Plant", "100,110 500,110 500,490 100,490"), room("services-control", "Electrical", "560,110 900,110 900,490 560,490")]
       },
       pods: {
-        title: "Research pods", concept: true, svg: "pods", viewBox: "0 0 1000 600",
+        title: "Research pods", concept: true, visual: "lab", svg: "pods", viewBox: "0 0 1000 600",
         rooms: [room("pods-lab", "Research lab", "100,150 430,150 430,450 100,450"), room("pods-collab", "Collaboration", "570,150 900,150 900,450 570,450")]
       },
       "sea-cages": {
-        title: "Sea-cage system", concept: true, svg: "sea", viewBox: "0 0 1000 600",
+        title: "Sea-cage system", concept: true, visual: "sea", svg: "sea", viewBox: "0 0 1000 600",
         rooms: [room("sea-growout", "Grow-out enclosure", "110,130 650,130 650,500 110,500"), room("sea-mooring", "Mooring & access", "700,130 910,130 910,300 700,300"), room("sea-monitoring", "Monitoring", "700,340 910,340 910,500 700,500")]
       }
     }
