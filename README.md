@@ -27,11 +27,13 @@ All copy lives in `js/content.js` for future Statamic mapping. No invented metri
 
 Synced to `crisdisclafani/grok_gulf_aquaculture` → https://crisdisclafani.github.io/grok_gulf_aquaculture/
 
-## Interactive facilities
+## Interactive facilities — 3D v2
 
-Three scenes use the client Phase 1 / Phase 2 renders and the generated offshore placeholder footage. Buildings open real client plans or explicitly tagged illustrative `concept` interiors. There are no descriptive panels: just short labels, source notes and back navigation.
+The explorer starts from a real-time aerial coastal masterplan containing the Phase 1 halls, Phase 2 hatchery/broodstock, visitor dome and offshore sea cages together. Three.js r160 is bundled locally with its MIT licence; no CDN or external runtime requests are used.
 
-Standalone URL: `/embed/facilities.html`
+Buildings open low-poly 3D environments inspired by the supplied PDF layouts. Water surfaces use a lightweight animated shader, with gold pipework, walkways, camera fly-in and clickable zone focus. **Every interior is a placeholder awaiting client images, not an as-built model.** Concept interiors retain their visible `concept` tag. PDF drawings are retained only as archived source references and are never displayed in the explorer.
+
+Drag to orbit, pinch/scroll to zoom, or use the accessible building/zone buttons. DPR is capped, geometry is low-poly, and WebGL failure provides static illustrated navigation. Standalone URL: `/embed/facilities.html`.
 
 ```html
 <iframe src="https://crisdisclafani.github.io/grok_gulf_aquaculture/embed/facilities.html"
@@ -40,4 +42,4 @@ Standalone URL: `/embed/facilities.html`
   loading="lazy" allow="autoplay; fullscreen"></iframe>
 ```
 
-Source mapping and the Phase 1 roof-to-room caveat are documented in `assets/facilities/README.md`. Desktop/mobile interaction tests: `python3 tests/test_facilities.py` (with the included local preview server running).
+Desktop/mobile/fallback interaction tests: `python3 tests/test_facilities_v2.py` with the included local preview server running. Screenshots: `screenshots/facilities-v2/`.

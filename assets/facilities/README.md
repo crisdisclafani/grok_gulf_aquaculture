@@ -30,3 +30,9 @@ Exterior SVGs use each source image's native pixel viewBox. Their polygons follo
 ```
 
 The module has no runtime dependencies, uses local fonts/media and requires no JavaScript in the parent page. Reduced-motion devices receive static transitions and no forced video playback.
+
+## 3D v2 runtime
+
+The cleaned PDF crops in this folder are archived source references only. They are not requested or displayed by the current explorer. `js/facilities-3d-data.js` translates their relative zone grouping into illustrative, unmeasured 3D arrangements. No capacities, engineering dimensions or equipment specifications are asserted.
+
+The default aerial scene is a stylized composition, not a surveyed geographic site model. The dome and offshore structures are intentionally shown together. All interiors are marked `placeholder · awaiting client images`; concept interiors additionally retain `concept`. Three.js r160 and its MIT licence are in `vendor/`.
