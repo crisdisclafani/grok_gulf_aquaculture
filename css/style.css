@@ -279,3 +279,8 @@ a{color:inherit;-webkit-tap-highlight-color:rgba(217,119,36,.15)}
 
 .enq.is-sent > :not(.thanks){display:none}
 .enq.is-sent .thanks{display:block}
+
+
+/* In-hero cinematic overrides */
+.hero.hero-cine{overflow:visible}
+.hero.hero-cine .hero-visual{display:none}

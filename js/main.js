@@ -54,15 +54,30 @@
   /* ——— MAIN ——— */
   let h = "";
 
-  h += `<section id="home" class="hero">
-  <div class="hero-visual" aria-hidden="true">
-    <div class="hero-photo"></div>
-    <svg class="fish-mark" viewBox="0 0 200 120" fill="none"><path d="M20 60 C60 10, 140 10, 180 60 C140 110, 60 110, 20 60" stroke="url(#gFish)" stroke-width="1.6"/><path d="M40 60 C80 25, 130 25, 170 60 C130 95, 80 95, 40 60" stroke="url(#gFish)" stroke-width="1.2" opacity=".7"/><defs><linearGradient id="gFish" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d97724"/><stop offset="1" stop-color="#B39257"/></linearGradient></defs></svg>
-  </div>
-  <div class="hero-inner">
+  h += `<section id="home" class="hero hero-cine">
+  <div id="hero-cinematic" class="hero-cine-mount" aria-label="Opening sequence"></div>
+  <aside id="hero-stage-detail" class="hero-stage-detail" hidden>
+    <div class="hero-stage-poster" data-poster aria-hidden="true"></div>
+    <div class="hero-stage-body wrap">
+      <div class="hero-stage-top">
+        <p class="eyebrow" data-kicker></p>
+        <button type="button" class="hero-stage-close" data-close aria-label="Close stage detail">×</button>
+      </div>
+      <h2 data-title></h2>
+      <p class="lead" data-detail></p>
+      <div class="hero-stage-grid">
+        <section><h3>Processes</h3><ul data-proc></ul></section>
+        <section><h3>Technologies</h3><ul data-tech></ul></section>
+        <section><h3>Facilities</h3><ul data-fac></ul></section>
+      </div>
+      <div class="hero-stage-params" data-params></div>
+      <div class="hero-stage-actions">
+        <a class="btn btn-gold" href="#phases" data-goto>View in production cycle →</a>
+      </div>
+    </div>
+  </aside>
+  <div class="hero-band wrap">
     <span class="tag"><i></i>${S.hero.eyebrow}</span>
-    <h1>${S.hero.titleLead}<em>${S.hero.titleAccent}</em></h1>
-    <div class="gold-thread" aria-hidden="true">✦</div>
     <p class="lead">${S.hero.text}</p>
     <p class="byline">${S.brand.attribution}</p>
     <div class="hero-cta">

@@ -155,6 +155,8 @@ window.SITE = {
     { id: "science", word: "Science", src: "assets/video/lab.mp4", poster: "assets/video/lab-poster.jpg", note: "Placeholder footage" },
     { id: "research", word: "Research", src: "assets/video/research.mp4", poster: "assets/video/research-poster.jpg", note: "Placeholder footage" }
   ],
+  cycleTitle: "The Production Cycle",
+  cycleLead: "Five stages from broodstock to grow-out",
   cycleNote: "Continuous lab oversight · Real-time data & traceability",
   pillars: [
     "Prioritise native species like grouper and red snapper",
